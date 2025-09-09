@@ -1,0 +1,59 @@
+import random
+
+def build_markov_chain(text):
+    """
+    Builds a Markov chain model from the input text.
+    The model is a dictionary where each key is a word and the value is a list
+    of words that can follow it.
+    """
+   
+    words = text.split()
+    
+    
+    markov_chain = {}
+    
+    
+    for i in range(len(words) - 1):
+        current_word = words[i]
+        next_word = words[i+1]
+        
+
+        if current_word in markov_chain:
+            markov_chain[current_word].append(next_word)
+        
+        else:
+            markov_chain[current_word] = [next_word]
+            
+    return markov_chain
+
+def generate_text(chain, length=50):
+    """
+    Generates new text using the built Markov chain model.
+    """
+    
+    current_word = random.choice(list(chain.keys()))
+    generated_text = [current_word]
+    
+        for _ in range(length - 1):
+        
+        if current_word in chain:
+            
+            next_word = random.choice(chain[current_word])
+            generated_text.append(next_word)
+            current_word = next_word
+        else:
+            
+            current_word = random.choice(list(chain.keys()))
+            
+    return ' '.join(generated_text)
+corpus_text = """
+A cat is a small animal. The cat sat on the mat. A dog is a larger animal.
+The dog played in the garden. The cat and the dog are friends. The garden is green.
+The cat likes the dog.
+"""
+markov_model = build_markov_chain(corpus_text)
+generated_output = generate_text(markov_model, length=40)
+print("--- Corpus Text ---")
+print(corpus_text)
+print("\n--- Generated Text (Markov Chain) ---")
+print(generated_output)
